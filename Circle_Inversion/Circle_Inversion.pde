@@ -2,15 +2,18 @@ ArrayList<Point> pts=new ArrayList<Point>();
 Point[] temps = new Point[200];
 float[] mp = new float[2];
 boolean md= false;
+float circleRadius=0.5;
+float minS=0;
+float maxS=0.75;
 void setup(){
   size(500,500);
   
 }
 void draw(){
   background(255);
-  float cx=map(0,0,1,0,width);
-  float cy=map(0,0,1,height,0);
-  float cr=map(0.5,0,1,0,width)*2;
+  float cx=map(0,minS,maxS,0,width);
+  float cy=map(0,minS,maxS,height,0);
+  float cr=map(circleRadius+minS,minS,maxS,0,width)*2;
   stroke(0);
   strokeWeight(4);
   fill(0,0);
@@ -19,17 +22,17 @@ void draw(){
   for(Point p: pts)
     p.draw();
   if(mousePressed && mouseButton==LEFT){
-    float x=map(mouseX,0,width,0,1);
-    float y=map(mouseY,height,0,0,1);
+    float x=map(mouseX,0,width,minS,maxS);
+    float y=map(mouseY,height,0,minS,maxS);
     pts.add(new Point(x,y));
   }else if(mousePressed && mouseButton==RIGHT){
     if(!md){
       md=true;
-      mp=new float[]{map(mouseX,0,width,0,1),map(mouseY,height,0,0,1)};
+      mp=new float[]{map(mouseX,0,width,minS,maxS),map(mouseY,height,0,minS,maxS)};
     }
     for(int i=0;i<temps.length;i++){
-      float x=map(mouseX,0,width,0,1);
-      float y=map(mouseY,height,0,0,1);
+      float x=map(mouseX,0,width,minS,maxS);
+      float y=map(mouseY,height,0,minS,maxS);
       temps[i]=new Point((x-mp[0])/temps.length*i+mp[0],(y-mp[1])/temps.length*i+mp[1]);
       temps[i].draw();
     }
@@ -68,14 +71,14 @@ class Point{
   void updatePoints(){
     float x=rawX;
     float y=rawY;
-    this.pixX=map(x,0,1,0,width);
-    this.pixY=map(y,0,1,height,0);
+    this.pixX=map(x,minS,maxS,0,width);
+    this.pixY=map(y,minS,maxS,height,0);
     
-    float a=0.25/(x*x+y*y);
+    float a=circleRadius*circleRadius/(x*x+y*y);
     refX=a*rawX;
     refY=a*rawY;
-    repX=map(refX,0,1,0,width);
-    repY=map(refY,0,1,height,0);
+    repX=map(refX,minS,maxS,0,width);
+    repY=map(refY,minS,maxS,height,0);
     
   }
   
